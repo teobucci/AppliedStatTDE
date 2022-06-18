@@ -7,6 +7,7 @@ head(ter)
 mcshapiro.test(gir)
 mcshapiro.test(ter) # qui siamo al pelo ma la assumiamo comunque normale
 
+# usa Spooled
 D <- data.frame(ter[,1]-gir[,1], ter[,2]-gir[,2])
 mcshapiro.test(D)# 0.862
 

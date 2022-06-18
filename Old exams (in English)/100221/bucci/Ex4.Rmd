@@ -1,0 +1,193 @@
+---
+title: "Exercise 1"
+author: "Teo Bucci"
+output:
+    pdf_document:
+        toc: true
+        toc_depth: 3
+        number_section: true
+    html_document:
+        toc: true 
+        toc_float: true 
+        number_sections: true
+---
+
+```{r setup, include=FALSE}
+path_images = paste(here::here("images"),"/", sep="")
+knitr::opts_chunk$set(fig.path = path_images,
+                      echo = FALSE,
+					  dev = "png",
+					  dpi = 300,
+					  cache=TRUE,
+					  fig.align="center")
+```
+
+```{r include=FALSE}
+library(thestatboys.templates)
+library('utils') # needs to be here to use install/installed packeds
+
+# Package names
+packages <- c('viridis',
+              'ggplot2',
+              'mvtnorm',
+              'mvnormtest',
+              'car',
+              'caret',
+              'here',
+              'rgl',
+              'MASS',
+              'ROCR',
+              'caret',
+              'dplyr',
+              'corrplot',
+              'e1071',
+              'ROCit',
+              'RRF',
+              'randomForest',
+              'geoR',
+              'sp',
+              'gstat'
+)
+
+# Install packages not yet installed
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+# Packages loading
+invisible(lapply(packages, library, character.only = TRUE))
+rm(installed_packages, packages) # remove useless list now
+```
+
+```{r include=FALSE}
+rm(list=ls())
+data <- read.table('hotels.txt')
+```
+
+# Introduction
+
+## Point A
+
+Our model is now
+$$
+y(s_i) = a_0 + \delta(s_i)
+$$
+
+```{r}
+coordinates(data) <- c('x','y')
+
+# fit the variogram with the stationari model
+v <- variogram(price ~ 1 , data=data)
+plot(v, pch=19)
+v.fit1 <- fit.variogram(v, vgm(5000, "Sph", 500, 500))
+plot(v, v.fit1, pch = 3)
+
+g.no <- gstat(id = 'price', formula = price ~ 1 , data = data, model = v.fit1, set = list(gls=1))
+predict(g.no, data[1,], BLUE = TRUE)$price.pred
+```
+$a_0$ is 263.5391.
+
+## Point B
+
+Our model is now
+$$
+y(s_i) = a_{0,g} + a_{1,g}\cdot d(s_i) + \delta(s_i) \quad g=1,2
+$$
+
+We have to estimate 4 coefficients.
+
+```{r}
+v2 <- variogram(price ~ winter + winter:distance, data=data)
+plot(v2,pch=19)
+v.fit2 <- fit.variogram(v2, vgm(1000, "Sph", 500))
+plot(v2, v.fit2, pch = 3)
+
+g.t <- gstat(id = 'price', formula = price ~ distance + winter + winter:distance, data = data, model = v.fit2, set = list(gls=1))
+
+# Estimate the variogram from GLS residuals
+v.gls <- variogram(g.t)
+plot(v.gls)
+
+v.gls.fit <- fit.variogram(v.gls, vgm(1000, "Sph", 500))
+plot(v.gls, v.gls.fit, pch = 19)
+
+# Update gstat object with variogram model
+g.t <- gstat(id = 'price', formula = price ~ distance + winter + winter:distance, data = data, nmax = 100, model = v.gls.fit, set = list(gls=1))
+```
+
+Strategy to estimate coefficients.
+
+We can consider two observations and solve a linear system.
+
+Winter
+
+$$
+\begin{cases}
+y_{pred}(s_{\texttt{winter}}') = a_{0,\texttt{winter}} + a_{1,\texttt{winter}} \cdot d(s_{\texttt{winter}}') \\
+y_{pred}(s_{\texttt{winter}}'') = a_{0,\texttt{winter}} + a_{1,\texttt{winter}} \cdot d(s_{\texttt{winter}}'')
+\end{cases}
+$$
+
+Not winter
+
+$$
+\begin{cases}
+y_{\texttt{pred}}(s_{\texttt{notWinter}}') = a_{0,\texttt{notWinter}} + a_{1,\texttt{notWinter}} \cdot d(s_{\texttt{notWinter}}') \\
+y_{\texttt{pred}}(s_{\texttt{notWinter}}'') = a_{0,\texttt{notWinter}} + a_{1,\texttt{notWinter}} \cdot d(s_{\texttt{notWinter}}'')
+\end{cases}
+$$
+
+Solving it leads us to
+
+$$
+a_{1,g} = \frac{y_{pred}(s_g')-y_{pred}(s_g'')}{d(s_g')-d(s_g'')}
+\qquad a_0 = y_{pred}(s_g') - a_1 \cdot d(s_g')
+$$
+
+
+```{r}
+# data$winter
+
+# No winter
+s1 <- data[1,] # no winter
+s2 <- data[2,] # no winter
+w1 <- predict(g.t, s1, BLUE = TRUE)$price.pred
+w2 <- predict(g.t, s2, BLUE = TRUE)$price.pred
+a1 <- (w2 - w1) / (s2$distance - s1$distance)
+a0 <- w1 - a1 * s1$distance
+c(a0=a0,a1=a1)
+
+# Winter
+s1 <- data[3,] # winter
+s2 <- data[5,] # winter
+w1 <- predict(g.t, s1, BLUE = TRUE)$price.pred
+w2 <- predict(g.t, s2, BLUE = TRUE)$price.pred
+a1 <- (w2 - w1) / (s2$distance - s1$distance)
+a0 <- w1 - a1 * s1$distance
+c(a0=a0,a1=a1)
+```
+
+## Point C
+
+
+Model 2
+
+## Point D
+
+```{r}
+sf <- c(342362.58, 5072518.24) # center
+s0 <- c(342399.74, 5072272.75) # our position
+d <- sqrt((sf[1]-s0[1])^2+(sf[2]-s0[2])^2)
+newdat <- data.frame(x = s0[1],
+                     y = s0[2],
+                     distance = d,
+                     winter = 'yes')
+coordinates(newdat) <- c('x','y')
+guess <- predict(g.t, newdat, BLUE = TRUE)$price.pred
+guess
+```
+
+
+
+
+

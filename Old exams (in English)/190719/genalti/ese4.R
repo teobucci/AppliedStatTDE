@@ -39,7 +39,7 @@ abline(h=0,lty=2)
 plot(pca_W.1$harmonics[3,],col=2,ylab='FPC3')
 dev.off()
 
-# la prima componente principale ci mostra delle misurazioni ove la temperatura è bassa nei primi tre mesi
+# la prima componente principale ci mostra delle misurazioni ove la temperatura Ã¨ bassa nei primi tre mesi
 # dell'anno, e che la vede risalire fino ad un massimo attorno ad ottobre
 # la seconda, al contrario, ci mostra un andamento opposto con un minimo di temperature raggiunte attorno a 
 # luglio ed un massimo tra febbraio e marzo
@@ -48,17 +48,18 @@ par(mfrow=c(1,3))
 plot.pca.fd(pca_W.1, nx=100, pointplot=TRUE, harm=c(1,2,3), expand=0, cycle=FALSE)
 dev.off()
 
-plot(pca_W.1$scores[,1],pca_W.1$scores[,2], col = df[,366], pch = 16, xlab = 'PC1', ylab = 'PC2')
+par(mfrow=c(1,1))
+plot(pca_W.1$scores[,1],pca_W.1$scores[,2], col = factor(df[,366]), pch = 16, xlab = 'PC1', ylab = 'PC2')
 legend('topleft',c('Deep', 'Medium', 'Surface'), col = c('black','red','green'), pch = 16)
 dev.off()
 
 # ho conferma che esistono tre andamenti ben distinti tra le temperature nelle mie stazioni
-# vediamo come le prime due componenti principali bene separano le tre profondità diverse a cui vengono misurate
-# le profondità, in particolare vediamo come in profondità (deep, in nero) la prima componente principale assuma
-# bassi valori, in media profondità valori più alti e poi ancora in superficie.
-# questo mi suggerisce che i tre andamenti che vedevamo nelle misurazioni sono dovuti alle differenti profondità
+# vediamo come le prime due componenti principali bene separano le tre profondit? diverse a cui vengono misurate
+# le profondit?, in particolare vediamo come in profondit? (deep, in nero) la prima componente principale assuma
+# bassi valori, in media profondit? valori pi? alti e poi ancora in superficie.
+# questo mi suggerisce che i tre andamenti che vedevamo nelle misurazioni sono dovuti alle differenti profondit?
 # a cui le stazioni misurano, e che la prima componente principale ci spiega questo fenomeno diminuendo con 
-# l'aumentare la profondità
+# l'aumentare la profondit?
 
 
 
