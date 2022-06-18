@@ -46,4 +46,5 @@ docs/
 
 # translation temp files
 po/*~
-© 2021 GitHub, Inc.
+
+*.DS_Store
