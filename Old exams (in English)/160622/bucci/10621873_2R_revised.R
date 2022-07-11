@@ -75,14 +75,26 @@ contour(x, y, matrix(z2, 200), levels=0, drawlabels=F, add=T)
 
 ldaCV <- lda(d[,1:2], d$release.country, CV=TRUE, prior = prior.c)  # specify the argument CV
 misc <- table(class.true=d$release.country, class.assignedCV=ldaCV$class)
-AERCV  <- misc[1,2]*prior.c[1]/sum(misc[1,]) + misc[2,1]*prior.c[2]/sum(misc[2,])
+AERCV <- misc[1,2]*prior.c[1]/sum(misc[1,]) + misc[2,1]*prior.c[2]/sum(misc[2,])
 AERCV
 
 # ------------------------- point c
 
+# To find the estimated probability that a new unit is classified as a class A, 
+# we have to find the probability of belonging to class A.
+# We can use the Law of Total Probability
 
+# P(class=US) = P(class=US | unit=US) P(unit=US)
+#             + P(class=US | unit=GE) P(unit=GE)
 
+prior.c[1] # P(unit=GE)
+prior.c[2] # P(unit=US)
 
+misc[1,2]/sum(misc[1,]) # P(class=US | unit=GE)
+misc[2,2]/sum(misc[2,]) # P(class=US | unit=US)
+
+prob <- misc[1,2]/sum(misc[1,]) * prior.c[1] + misc[2,2]/sum(misc[2,]) * prior.c[2]
+prob
 
 # ------------------------- point d
 
