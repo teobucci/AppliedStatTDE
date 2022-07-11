@@ -52,9 +52,9 @@ mylda
 iris <- d[,1:2]
 
 plot(d[,1:2], col = d$release.country, pch=20)
-legend("topright", legend=levels(d$release.country), fill=c('red','green'), cex=.7)
+legend("topright", legend=levels(d$release.country), fill=unique(d$release.country), cex=.7)
 
-points(mylda$means, pch=4,col=c('red','green') , lwd=2, cex=1.5)
+points(mylda$means, pch=21, col=unique(d$release.country), lwd=3, cex=1.5)
 x  <- seq(min(iris[,1]), max(iris[,1]), length=200)
 y  <- seq(min(iris[,2]), max(iris[,2]), length=200)
 xy <- expand.grid(Sepal.Length=x, Sepal.Width=y)
