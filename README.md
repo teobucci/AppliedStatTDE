@@ -2,7 +2,7 @@
 
 # Applied Statistics - Exam solutions
 
-This repository contains unofficial solutions made by students of the past exams of the course **APPLIED STATISTICS (052498)** by Professor Piercesare Secchi at Politecnico di Milano.
+This repository contains unofficial solutions made by students of the past exams of the course **APPLIED STATISTICS (052498)** at Politecnico di Milano.
 
 No copyright infringements are intended, the intellectual property of the tests belongs to the Professor.
 
