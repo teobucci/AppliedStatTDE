@@ -1,8 +1,0 @@
-Packages to be downloaded:
-
-rgl
-sp
-lattice
-gstat
-geoR
-spatstat
