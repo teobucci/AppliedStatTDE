@@ -5,7 +5,3 @@
 This repository contains unofficial solutions made by students of the past exams of the course **APPLIED STATISTICS (052498)** at Politecnico di Milano.
 
 No copyright infringements are intended, the intellectual property of the tests belongs to the Professor.
-
-## How to contribute?
-
-The easiest way to upload your solutions is to [fill this form](https://forms.gle/47fas3KuHLXFNAaw8). Alternatively you can do a Pull Request or write me on Telegram (`@teobucci`).
