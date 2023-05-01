@@ -1,7 +1,9 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-# Applied Statistics - Exam solutions
+# Applied Statistics: Exam Solutions
 
-This repository contains unofficial solutions made by students of the past exams of the course **APPLIED STATISTICS (052498)** at Politecnico di Milano.
+Questa repository contiene soluzioni non ufficiali realizzate dagli studenti degli esami passati del corso **APPLIED STATISTICS (052498)** presso il Politecnico di Milano.
 
-No copyright infringements are intended, the intellectual property of the tests belongs to the Professor.
+L'uso di questo materiale è particolarmente consigliato insieme alla [repository dei formulari](https://github.com/SmearyTundra/applied-statistics-riassuntone).
+
+Nessuna violazione del copyright prevista, la proprietà intellettuale delle prove appartiene al Professore.
